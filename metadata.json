@@ -1,0 +1,6 @@
+{
+  "name": "AI-Based Skin Health Predictor",
+  "description": "An AI-based prediction tool for overall skin health score and dry skin risk based on daily lifestyle factors.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
