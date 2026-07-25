@@ -81,7 +81,6 @@ AI-based prediction module to estimate possible future skin health conditions ba
 
 ---
 
-# 🏗️ System Architecture
              User
               |
               |
@@ -196,6 +195,10 @@ Run using Live Server or deploy using Netlify.
 Frontend:
 
 https://dermaai-skinhealth.netlify.app/
+
+Backend:
+
+https://derma-ai-dbfb.onrender.com
 
 👥 Team
 Developers
