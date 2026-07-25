@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Based Skin Health Predictor | Luxury AI Platform</title>
+
+  <!-- Google Fonts: Cormorant Garamond, Playfair Display, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome & Chart.js & html2pdf -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            luxury: {
+              bg: '#111111',
+              card: '#1A1A1A',
+              surface: 'rgba(255, 255, 255, 0.05)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              rosegold: '#B76E79',
+              'rosegold-light': '#D4929D',
+              champagne: '#D4AF8C',
+              blush: '#E8B4B8',
+              emerald: '#5FA777',
+              gold: '#E5B84B',
+              coral: '#D96C6C',
+            },
+            brand: {
+              50: '#fcf8f9',
+              100: '#f8f0f2',
+              500: '#b76e79',
+              600: '#a35c67',
+              700: '#8c4b55',
+              gold: '#d4af8c'
+            }
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', '"Cormorant Garamond"', 'serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'rosegold-glow': '0 0 25px -5px rgba(183, 110, 121, 0.25)',
+            'champagne-glow': '0 0 20px -5px rgba(212, 175, 140, 0.2)',
+            'luxury-card': '0 10px 30px -10px rgba(0, 0, 0, 0.6)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1, h2, h3, .font-serif-heading {
+      font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(229, 231, 235, 0.8);
+    }
+    .dark .glass-card {
+      background: rgba(26, 26, 26, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .dark .glass-card-rosegold {
+      background: rgba(26, 26, 26, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(183, 110, 121, 0.3);
+      box-shadow: 0 0 25px -5px rgba(183, 110, 121, 0.15);
+    }
+    .btn-rosegold {
+      background: linear-gradient(135deg, #B76E79 0%, #C8828D 50%, #D4AF8C 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(183, 110, 121, 0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-rosegold:hover {
+      box-shadow: 0 6px 28px rgba(183, 110, 121, 0.45);
+      transform: translateY(-1px);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(183, 110, 121, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(183, 110, 121, 0.6);
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf7f8] dark:bg-[#111111] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col selection:bg-[#B76E79]/30 selection:text-[#B76E79]">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-200/80 dark:border-white/10 shadow-lg px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Logo & Branding -->
+      <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('predictor')">
+        <div class="w-12 h-10 rounded-xl overflow-hidden ring-2 ring-[#B76E79]/40 shadow-md shadow-[#B76E79]/20 group-hover:scale-105 transition-transform bg-[#12131A] shrink-0 flex items-center justify-center p-0.5">
+          <img src="/src/assets/images/derma_ai_arched_logo_1784909482698.jpg" alt="Derma AI Logo" class="w-full h-full object-cover rounded-lg" referrerPolicy="no-referrer" />
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white font-serif flex items-center gap-2">
+            Derma AI
+            <span class="text-[10px] font-semibold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-[#B76E79]/15 text-[#B76E79] dark:text-[#D4929D] border border-[#B76E79]/30">Luxe AI Edition</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden xl:flex items-center space-x-1 text-xs font-semibold">
+        <button onclick="switchTab('predictor')" id="nav-predictor" class="nav-btn px-3.5 py-2 rounded-xl bg-[#B76E79]/15 text-[#B76E79] dark:text-[#D4929D] font-bold border border-[#B76E79]/30 shadow-sm transition-all">
+          <i class="fa-solid fa-list-check mr-1.5"></i> Lifestyle AI
+        </button>
+        <button onclick="switchTab('vision')" id="nav-vision" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-camera mr-1.5"></i> Vision Scan
+        </button>
+        <button onclick="switchTab('combined')" id="nav-combined" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-dna mr-1.5"></i> Combined AI
+        </button>
+        <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-crystal-ball mr-1.5"></i> Future & Age
+        </button>
+        <button onclick="switchTab('shap')" id="nav-shap" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-brain mr-1.5"></i> Explainable AI
+        </button>
+        <button onclick="switchTab('research')" id="nav-research" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-graduation-cap mr-1.5"></i> Research
+        </button>
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-chart-line mr-1.5"></i> History
+        </button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-user-shield mr-1.5"></i> Admin
+        </button>
+        <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">
+          <i class="fa-solid fa-gear mr-1.5"></i> Settings
+        </button>
+      </nav>
+
+      <!-- User Controls & Mobile Menu Toggle -->
+      <div class="flex items-center space-x-3">
+        <!-- Theme Switcher -->
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition">
+          <i class="fa-solid fa-moon hidden dark:inline text-lg text-[#D4AF8C]"></i>
+          <i class="fa-solid fa-sun inline dark:hidden text-lg text-[#B76E79]"></i>
+        </button>
+
+        <!-- Auth Button / User Profile -->
+        <div id="auth-header-container">
+          <button onclick="openAuthModal('login')" class="btn-rosegold px-4 py-2 rounded-xl font-semibold text-xs transition">
+            <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Sign In
+          </button>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileNav()" class="xl:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-nav" class="hidden xl:hidden mt-3 pt-3 border-t border-slate-200 dark:border-white/10 grid grid-cols-2 gap-2 text-xs font-semibold">
+      <button onclick="switchTab('predictor')" class="p-2.5 rounded-xl text-left bg-[#B76E79]/15 text-[#B76E79] font-bold"><i class="fa-solid fa-list-check mr-1.5"></i> Lifestyle AI</button>
+      <button onclick="switchTab('vision')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-camera mr-1.5"></i> Vision Scan</button>
+      <button onclick="switchTab('combined')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-dna mr-1.5"></i> Combined AI</button>
+      <button onclick="switchTab('simulator')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-crystal-ball mr-1.5"></i> Future & Age</button>
+      <button onclick="switchTab('shap')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-brain mr-1.5"></i> Explainable AI</button>
+      <button onclick="switchTab('research')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-graduation-cap mr-1.5"></i> Research</button>
+      <button onclick="switchTab('dashboard')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-chart-line mr-1.5"></i> History</button>
+      <button onclick="switchTab('admin')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-user-shield mr-1.5"></i> Admin</button>
+      <button onclick="switchTab('settings')" class="p-2.5 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/5"><i class="fa-solid fa-gear mr-1.5"></i> Settings</button>
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION BODY -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 space-y-8">
+
+    <!-- ==================================================== -->
+    <!-- TAB 1: LIFESTYLE AI PREDICTOR (PRIMARY MODULE 1) -->
+    <!-- ==================================================== -->
+    <section id="tab-predictor" class="tab-content block space-y-6">
+      
+      <!-- Header Banner -->
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-1.5">
+          <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+            <i class="fa-solid fa-heart-pulse text-[#B76E79]"></i> Lifestyle & Behavioral Skin Assessment
+          </h2>
+          <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+            Primary AI module based on published IEEE research. Enter daily lifestyle habits to predict your <b class="text-[#B76E79]">Skin Health Score (0-100)</b> and <b class="text-[#D4AF8C]">Dry Skin Risk</b> using Random Forest, SVM, and XGBoost models.
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <button onclick="loadSampleData('healthy')" class="px-4 py-2 text-xs font-bold rounded-xl bg-[#B76E79]/10 text-[#B76E79] dark:text-[#D4929D] border border-[#B76E79]/30 hover:bg-[#B76E79]/20 transition-all shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Healthy Sample
+          </button>
+          <button onclick="loadSampleData('stressed')" class="px-4 py-2 text-xs font-bold rounded-xl bg-[#D4AF8C]/10 text-[#D4AF8C] dark:text-[#E5B84B] border border-[#D4AF8C]/30 hover:bg-[#D4AF8C]/20 transition-all shadow-sm">
+            <i class="fa-solid fa-bolt mr-1.5"></i> Stressed Sample
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Form & Real-time Visualization Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Form Column -->
+        <div class="lg:col-span-5 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5">
+          <h3 class="text-lg font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-3.5">
+            <i class="fa-solid fa-sliders text-[#B76E79]"></i> Behavioral Inputs
+          </h3>
+
+          <form id="skinForm" class="space-y-4">
+            <!-- Age & Gender -->
+            <div class="grid grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Age</label>
+                <input type="number" name="age" value="25" min="12" max="100" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Gender</label>
+                <select name="gender" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+                  <option value="female" class="dark:bg-[#1A1A1A]">Female</option>
+                  <option value="male" class="dark:bg-[#1A1A1A]">Male</option>
+                  <option value="other" class="dark:bg-[#1A1A1A]">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Original Inputs Preserved -->
+            <div class="grid grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sleep Hours</label>
+                <input type="number" name="sleep_hours" step="0.1" value="7" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sleep Quality (1-10)</label>
+                <input type="number" name="sleep_quality" min="1" max="10" value="8" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Stress Level (1-10)</label>
+                <input type="number" name="stress_level" min="1" max="10" value="5" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Water Intake (L/day)</label>
+                <input type="number" name="water_intake" step="0.1" value="2" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Diet (1=Healthy, 0=Unhealthy)</label>
+                <select name="diet_type" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+                  <option value="1" class="dark:bg-[#1A1A1A]">1 (Healthy Nutrients)</option>
+                  <option value="0" class="dark:bg-[#1A1A1A]">0 (High Processed/Sugar)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Screen Time (hours/day)</label>
+                <input type="number" name="screen_time" step="0.1" value="5" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Exercise (Mins/day)</label>
+                <input type="number" name="exercise_minutes" value="30" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Skincare Routine (1=Yes, 0=No)</label>
+                <select name="skincare_routine" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+                  <option value="1" class="dark:bg-[#1A1A1A]">1 (Active Routine)</option>
+                  <option value="0" class="dark:bg-[#1A1A1A]">0 (None)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Alcohol/Smoking (1=Yes, 0=No)</label>
+              <select name="alcohol_smoking" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] focus:border-[#B76E79] outline-none transition">
+                <option value="0" class="dark:bg-[#1A1A1A]">0 (No)</option>
+                <option value="1" class="dark:bg-[#1A1A1A]">1 (Yes)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-rosegold w-full py-3.5 px-5 rounded-2xl font-bold shadow-rosegold-glow flex items-center justify-center gap-2.5 text-sm tracking-wide mt-2">
+              <i class="fa-solid fa-sparkles"></i> Run AI Prediction
+            </button>
+          </form>
+        </div>
+
+        <!-- Output Column -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Primary Score Results Card -->
+          <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5 border border-slate-200/80 dark:border-white/10">
+            <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3.5">
+              <span class="flex items-center gap-2"><i class="fa-solid fa-chart-pie text-[#B76E79]"></i>Prediction Output</span>
+              <button onclick="generatePDFReport()" class="text-xs px-3 py-1.5 rounded-xl bg-[#B76E79]/10 text-[#B76E79] dark:text-[#D4929D] border border-[#B76E79]/20 hover:bg-[#B76E79]/20 transition-all font-semibold">
+                <i class="fa-solid fa-file-pdf text-[#D96C6C] mr-1.5"></i> Download PDF Report
+              </button>
+            </h3>
+
+            <!-- Original Output Text Container -->
+            <div id="result" class="p-5 rounded-2xl bg-slate-50 dark:bg-[#1A1A1A] border border-slate-200/80 dark:border-white/10 text-center text-sm text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
+              Click <b class="text-[#B76E79]">"Run AI Prediction"</b> above to calculate your Skin Health Score & Dryness Risk.
+            </div>
+
+            <!-- Gauge & Radar Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-center pt-2">
+              <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50/50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Score Gauge</span>
+                <canvas id="scoreGauge" width="180" height="180"></canvas>
+              </div>
+
+              <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50/50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Lifestyle Impact Radar</span>
+                <canvas id="lifestyleChart" width="220" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations Card -->
+          <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-3.5 border border-slate-200/80 dark:border-white/10">
+            <h4 class="text-sm font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-lightbulb text-[#D4AF8C]"></i> AI Personal Recommendations
+            </h4>
+            <ul id="recommendation-list" class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-[#5FA777]"></i> Enter your parameters above to receive tailored dermatological action items.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 2: COMPUTER VISION SKIN SCAN (MODULE 2) -->
+    <!-- ==================================================== -->
+    <section id="tab-vision" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-camera text-[#B76E79]"></i> Computer Vision Facial Skin Analysis
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          Upload a facial photo or take a picture with your webcam. The vision module detects acne, dryness, wrinkles, dark circles, redness, and texture clarity.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Image Upload / Camera Box -->
+        <div class="lg:col-span-6 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5 border border-slate-200/80 dark:border-white/10">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3.5">
+            <span class="text-sm font-bold font-serif text-slate-900 dark:text-white">Image Input</span>
+            <div class="flex items-center gap-2">
+              <button onclick="startWebcam()" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-[#B76E79]/10 text-[#B76E79] dark:text-[#D4929D] border border-[#B76E79]/20 hover:bg-[#B76E79]/20 transition-all">
+                <i class="fa-solid fa-webcam mr-1.5"></i> Use Webcam
+              </button>
+            </div>
+          </div>
+
+          <!-- Drop Area -->
+          <div id="drop-zone" onclick="document.getElementById('file-input').click()" class="border-2 border-dashed border-[#B76E79]/30 hover:border-[#B76E79] rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition text-center space-y-3.5 min-h-[260px] relative overflow-hidden bg-slate-50/50 dark:bg-white/5">
+            <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+            
+            <div id="upload-placeholder" class="space-y-2.5">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-[#B76E79]/10 text-[#B76E79] flex items-center justify-center text-2xl shadow-inner">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Click or drag facial image here</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Supports JPG, PNG, WEBP (Max 10MB)</p>
+            </div>
+
+            <!-- Canvas Display for Annotated Image -->
+            <canvas id="vision-canvas" class="hidden max-w-full max-h-[300px] rounded-xl object-contain shadow-md"></canvas>
+            <video id="webcam-video" autoplay playsinline muted class="hidden max-w-full max-h-[300px] rounded-xl shadow-md"></video>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="analyzeUploadedImage()" class="btn-rosegold flex-1 py-3.5 rounded-2xl font-bold text-xs tracking-wide shadow-rosegold-glow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-microscope text-sm"></i> Run Vision Analysis
+            </button>
+            <button id="capture-webcam-btn" onclick="captureWebcamFrame()" class="hidden px-5 py-3.5 rounded-2xl bg-[#D4AF8C] text-slate-900 font-bold text-xs hover:bg-[#C29B78] transition shadow-md">
+              <i class="fa-solid fa-camera mr-1"></i> Capture
+            </button>
+          </div>
+        </div>
+
+        <!-- Vision Analysis Output -->
+        <div class="lg:col-span-6 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5 flex items-center justify-between">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-chart-simple text-[#B76E79]"></i>Vision Scan Findings</span>
+            <span id="vision-clarity-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">Awaiting Scan</span>
+          </h3>
+
+          <div id="vision-results-body" class="space-y-4">
+            <p class="text-xs text-slate-500 dark:text-slate-400 text-center py-10">
+              Upload a facial photo above to run computer vision feature extraction.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 3: COMBINED AI ASSESSMENT -->
+    <!-- ==================================================== -->
+    <section id="tab-combined" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-dna text-[#B76E79]"></i> Combined AI Skin Health Assessment
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          Synthesizes Primary Lifestyle Prediction (<b class="text-[#B76E79]">70% weight</b>) with Secondary Computer Vision Scan (<b class="text-[#D4AF8C]">30% weight</b>) into a holistic skin health index.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 text-center space-y-2">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lifestyle Score (70%)</span>
+          <div id="combined-lifestyle-val" class="text-4xl font-extrabold text-[#B76E79]">--</div>
+          <p class="text-xs text-slate-400">Behavioral Engine</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 text-center space-y-2">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Vision Scan Score (30%)</span>
+          <div id="combined-vision-val" class="text-4xl font-extrabold text-[#D4AF8C]">--</div>
+          <p class="text-xs text-slate-400">Computer Vision Engine</p>
+        </div>
+
+        <div class="glass-card p-6 rounded-3xl shadow-luxury-card border border-[#B76E79]/30 text-center space-y-2 bg-[#B76E79]/5">
+          <span class="text-xs font-bold text-[#B76E79] dark:text-[#D4929D] uppercase tracking-wider">Combined Index</span>
+          <div id="combined-final-val" class="text-5xl font-black text-slate-900 dark:text-white font-serif">--</div>
+          <p id="combined-risk-badge" class="text-xs font-semibold text-[#B76E79] dark:text-[#D4929D]">Run predictions to calculate</p>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-3.5">
+        <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Integrated AI Executive Summary</h3>
+        <p id="combined-summary-text" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Run both the Lifestyle AI Prediction and Computer Vision Scan to generate an integrated holistic report.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 4: FUTURE SIMULATOR & SKIN AGE -->
+    <!-- ==================================================== -->
+    <section id="tab-simulator" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-crystal-ball text-[#B76E79]"></i> Biological Skin Age & Future Simulator
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          Estimate biological cellular skin age and simulate lifestyle modifications over 7, 30, and 90-day trajectories.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Skin Age Box -->
+        <div class="lg:col-span-5 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5 flex items-center gap-2">
+            <i class="fa-solid fa-hourglass-half text-[#B76E79]"></i> Biological Skin Age
+          </h3>
+
+          <div class="text-center py-4 space-y-2">
+            <div class="inline-block px-7 py-5 rounded-3xl bg-[#B76E79]/10 border border-[#B76E79]/30">
+              <span id="predicted-skin-age" class="text-5xl font-black text-[#B76E79] dark:text-[#D4929D] font-serif">23.5</span>
+              <span class="text-xs font-semibold block text-[#B76E79] dark:text-[#D4929D] mt-1">Years Old</span>
+            </div>
+            <p id="skin-age-diff-text" class="text-xs text-slate-600 dark:text-slate-300 font-medium pt-1">
+              1.5 years younger than actual age (25)
+            </p>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <span class="font-bold text-slate-700 dark:text-slate-300 block">Skin Aging Accelerators & Protectors</span>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+              <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Hydration Guard:</span><span class="text-[#5FA777] font-bold">-1.2 Years</span></div>
+              <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Stress Load:</span><span class="text-[#D4AF8C] font-bold">+0.8 Years</span></div>
+              <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Sleep Restoration:</span><span class="text-[#5FA777] font-bold">-0.5 Years</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Future Simulator Controls & Chart -->
+        <div class="lg:col-span-7 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-5 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5">
+            <i class="fa-solid fa-sliders text-[#B76E79] mr-2"></i>Interactive Lifestyle Scenario Simulator
+          </h3>
+
+          <div class="space-y-4 text-xs">
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                <span>Target Water Intake: <span id="sim-water-val" class="text-[#B76E79] font-bold">2.5 L</span></span>
+              </div>
+              <input type="range" id="sim-water" min="0.5" max="4.0" step="0.1" value="2.5" oninput="updateSimulation()" class="w-full accent-[#B76E79]">
+            </div>
+
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                <span>Target Sleep Hours: <span id="sim-sleep-val" class="text-[#B76E79] font-bold">8.0 hrs</span></span>
+              </div>
+              <input type="range" id="sim-sleep" min="4.0" max="10.0" step="0.5" value="8.0" oninput="updateSimulation()" class="w-full accent-[#B76E79]">
+            </div>
+
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                <span>Target Stress Level: <span id="sim-stress-val" class="text-[#B76E79] font-bold">3 / 10</span></span>
+              </div>
+              <input type="range" id="sim-stress" min="1" max="10" value="3" oninput="updateSimulation()" class="w-full accent-[#B76E79]">
+            </div>
+          </div>
+
+          <!-- Future Trajectory Chart -->
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10">
+            <canvas id="futureChart" height="160"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 5: EXPLAINABLE AI (SHAP) -->
+    <!-- ==================================================== -->
+    <section id="tab-shap" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-brain text-[#B76E79]"></i> Explainable AI (SHAP Feature Importance)
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          SHAP (Shapley Additive exPlanations) breaks down how each lifestyle variable positively or negatively drove your individual prediction.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Force Plot / Feature Importance Chart -->
+        <div class="lg:col-span-7 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-4 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5">
+            Local Prediction Impact (SHAP Force Breakdown)
+          </h3>
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10">
+            <canvas id="shapChart" height="220"></canvas>
+          </div>
+        </div>
+
+        <!-- Explanation List -->
+        <div class="lg:col-span-5 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-4 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5">
+            SHAP Natural Language Interpretation
+          </h3>
+          <div id="shap-breakdown-list" class="space-y-3 text-xs">
+            <p class="text-slate-400">Run a lifestyle prediction to view detailed SHAP feature contributions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 6: RESEARCH MODE (IEEE PAPER SHOWCASE) -->
+    <!-- ==================================================== -->
+    <section id="tab-research" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <span class="text-xs font-bold text-[#B76E79] dark:text-[#D4929D] uppercase tracking-widest">Published IEEE Research Work</span>
+          <h2 class="text-2xl font-bold font-serif text-slate-900 dark:text-white mt-1">
+            AI-Based Skin Health Prediction using Lifestyle & Behavioral Factors
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Machine Learning & Healthcare Systems Research
+          </p>
+        </div>
+        <a href="/outputs/model_comparison_r2.png" target="_blank" class="btn-rosegold px-5 py-2.5 rounded-2xl font-bold text-xs shadow-md transition flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-file-arrow-down"></i> View Research Figures
+        </a>
+      </div>
+
+      <!-- Model Performance Comparative Table -->
+      <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-4">
+        <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Comparative Model Metrics</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+                <th class="pb-3.5 font-semibold">Model Architecture</th>
+                <th class="pb-3.5 font-semibold">R² Score</th>
+                <th class="pb-3.5 font-semibold">MAE</th>
+                <th class="pb-3.5 font-semibold">RMSE</th>
+                <th class="pb-3.5 font-semibold">Role in Platform</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-white/5 font-medium">
+              <tr>
+                <td class="py-3.5 text-slate-900 dark:text-white font-bold"><i class="fa-solid fa-bolt text-[#D4AF8C] mr-2"></i>XGBoost Regressor</td>
+                <td class="py-3.5 text-[#B76E79] dark:text-[#D4929D] font-bold">0.96</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">1.8</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">2.3</td>
+                <td class="py-3.5"><span class="px-2.5 py-1 rounded-full bg-[#B76E79]/15 text-[#B76E79] dark:text-[#D4929D] font-semibold border border-[#B76E79]/30">Best Performer</span></td>
+              </tr>
+              <tr>
+                <td class="py-3.5 text-slate-900 dark:text-white font-bold"><i class="fa-solid fa-tree text-[#5FA777] mr-2"></i>Random Forest Regressor</td>
+                <td class="py-3.5 text-[#B76E79] dark:text-[#D4929D] font-bold">0.94</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">2.1</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">2.8</td>
+                <td class="py-3.5"><span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold border border-blue-500/20">Primary Baseline</span></td>
+              </tr>
+              <tr>
+                <td class="py-3.5 text-slate-900 dark:text-white font-bold"><i class="fa-solid fa-chart-line text-purple-500 mr-2"></i>Support Vector Machine (SVM)</td>
+                <td class="py-3.5 text-purple-500 font-bold">0.89</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">3.4</td>
+                <td class="py-3.5 text-slate-600 dark:text-slate-300">4.1</td>
+                <td class="py-3.5"><span class="px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 font-semibold border border-purple-500/20">Benchmark Model</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Preserved Output Research Images Gallery -->
+      <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-4">
+        <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Research Visualizations & Dataset Plots</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/actual_vs_predicted_shs.png" class="w-full h-40 object-cover rounded-xl" alt="Actual vs Predicted SHS">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">Actual vs Predicted SHS</span>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/feature_importance_rf.png" class="w-full h-40 object-cover rounded-xl" alt="Feature Importance RF">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">Random Forest Feature Importance</span>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/correlation_heatmap.png" class="w-full h-40 object-cover rounded-xl" alt="Correlation Heatmap">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">Correlation Matrix Heatmap</span>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/model_comparison_r2.png" class="w-full h-40 object-cover rounded-xl" alt="Model Comparison R²">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">Model R² Comparison</span>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/actual_vs_predicted_dsl.png" class="w-full h-40 object-cover rounded-xl" alt="Actual vs Predicted DSL">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">Actual vs Predicted DSL</span>
+          </div>
+
+          <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+            <img src="/outputs/shs_prediction_graph.png" class="w-full h-40 object-cover rounded-xl" alt="SHS Prediction Graph">
+            <span class="text-xs font-semibold block text-center text-slate-700 dark:text-slate-300">SHS Prediction Curve</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 7: DASHBOARD & HISTORY -->
+    <!-- ==================================================== -->
+    <section id="tab-dashboard" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-chart-line text-[#B76E79]"></i> User Assessment History
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          Saved history logs of your past skin health predictions and reports.
+        </p>
+      </div>
+
+      <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3.5">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Recent Predictions</h3>
+          <button onclick="fetchHistory()" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-[#B76E79]/10 text-[#B76E79] dark:text-[#D4929D] border border-[#B76E79]/20 hover:bg-[#B76E79]/20 transition-all">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Refresh
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400">
+                <th class="pb-3.5 font-semibold">Timestamp</th>
+                <th class="pb-3.5 font-semibold">Skin Score</th>
+                <th class="pb-3.5 font-semibold">Dry Risk</th>
+                <th class="pb-3.5 font-semibold">Water (L)</th>
+                <th class="pb-3.5 font-semibold">Sleep (hrs)</th>
+                <th class="pb-3.5 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body" class="divide-y divide-slate-100 dark:divide-white/5 font-medium">
+              <tr><td colspan="6" class="py-8 text-center text-slate-400">Loading history logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 8: ADMIN DASHBOARD -->
+    <!-- ==================================================== -->
+    <section id="tab-admin" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-user-shield text-[#B76E79]"></i> Platform Administrative Analytics
+        </h2>
+        <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+          System telemetry, active predictions count, common lifestyle risk distributions, and user trends.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 space-y-1">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Users</span>
+          <div id="admin-total-users" class="text-3xl font-extrabold text-slate-900 dark:text-white font-serif">--</div>
+        </div>
+        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 space-y-1">
+          <span class="text-[10px] font-bold text-[#B76E79] uppercase tracking-wider">Total Predictions</span>
+          <div id="admin-total-predictions" class="text-3xl font-extrabold text-[#B76E79] dark:text-[#D4929D] font-serif">--</div>
+        </div>
+        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 space-y-1">
+          <span class="text-[10px] font-bold text-[#D4AF8C] uppercase tracking-wider">Average Skin Score</span>
+          <div id="admin-avg-score" class="text-3xl font-extrabold text-[#D4AF8C] font-serif">--</div>
+        </div>
+        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 space-y-1">
+          <span class="text-[10px] font-bold text-[#5FA777] uppercase tracking-wider">Vision Scans</span>
+          <div id="admin-vision-scans" class="text-3xl font-extrabold text-[#5FA777] font-serif">--</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-4 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Platform User Growth</h3>
+          <canvas id="adminGrowthChart" height="180"></canvas>
+        </div>
+
+        <div class="lg:col-span-5 glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card space-y-4 border border-slate-200/80 dark:border-white/10">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white">Most Prevalent Lifestyle Risks</h3>
+          <div id="admin-risks-list" class="space-y-3 text-xs">
+            <p class="text-slate-400">Loading risk distributions...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== -->
+    <!-- TAB 9: SETTINGS -->
+    <!-- ==================================================== -->
+    <section id="tab-settings" class="tab-content hidden space-y-6">
+      <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10">
+        <h2 class="text-2xl lg:text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-gear text-[#B76E79]"></i> Platform Settings & Preferences
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-4">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5">Notification Reminders</h3>
+          <div class="space-y-3.5 text-xs">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-bold block text-slate-800 dark:text-slate-200">Daily Water Reminder</span>
+                <span class="text-slate-500">Hydration alerts every 2 hours</span>
+              </div>
+              <input type="checkbox" checked class="w-4 h-4 accent-[#B76E79]">
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-bold block text-slate-800 dark:text-slate-200">Skincare Routine Alert</span>
+                <span class="text-slate-500">Evening moisture & SPF check</span>
+              </div>
+              <input type="checkbox" checked class="w-4 h-4 accent-[#B76E79]">
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 lg:p-7 rounded-3xl shadow-luxury-card border border-slate-200/80 dark:border-white/10 space-y-4">
+          <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white border-b border-slate-200 dark:border-white/10 pb-3.5">Data Management</h3>
+          <div class="space-y-2.5 text-xs">
+            <button onclick="exportUserData()" class="w-full py-3 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-slate-200 font-semibold hover:bg-slate-200 dark:hover:bg-white/10 transition">
+              <i class="fa-solid fa-download mr-1.5"></i> Export Personal Assessment JSON
+            </button>
+            <button onclick="alert('Account data reset completed.')" class="w-full py-3 rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400 font-semibold hover:bg-red-500/20 transition">
+              <i class="fa-solid fa-trash mr-1.5"></i> Clear Local History
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================================================== -->
+  <!-- FLOATING AI CHATBOT & VOICE ASSISTANT WIDGET -->
+  <!-- ==================================================== -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <button onclick="toggleChatDrawer()" title="DermaAI Assistant" class="w-14 h-14 rounded-full p-0.5 btn-rosegold shadow-rosegold-glow flex items-center justify-center hover:scale-105 transition duration-200 overflow-hidden ring-2 ring-[#B76E79]/60">
+      <img src="/src/assets/images/derma_ai_arched_logo_1784909482698.jpg" alt="DermaAI Chatbot Logo" class="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
+    </button>
+  </div>
+
+  <!-- Chat Drawer Modal -->
+  <div id="chat-drawer" class="fixed bottom-24 right-6 z-50 w-80 sm:w-96 glass-card rounded-3xl shadow-2xl border border-slate-200/80 dark:border-white/15 hidden flex flex-col h-[500px]">
+    <!-- Drawer Header -->
+    <div class="p-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-gradient-to-r from-[#B76E79]/15 to-[#D4AF8C]/15 rounded-t-3xl">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl overflow-hidden ring-2 ring-[#B76E79]/40 shadow-sm bg-[#12131A] shrink-0 p-0.5">
+          <img src="/src/assets/images/derma_ai_arched_logo_1784909482698.jpg" alt="DermaAI Assistant Logo" class="w-full h-full object-cover rounded-lg" referrerPolicy="no-referrer" />
+        </div>
+        <div>
+          <h4 class="text-sm font-bold font-serif text-slate-900 dark:text-white">DermaAI Assistant</h4>
+          <span class="text-[10px] text-[#B76E79] dark:text-[#D4929D] font-semibold">Voice & Chat Ready</span>
+        </div>
+      </div>
+      <button onclick="toggleChatDrawer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Chat Messages Scroll Container -->
+    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+      <div class="flex gap-2.5 items-start">
+        <img src="/src/assets/images/derma_ai_arched_logo_1784909482698.jpg" alt="DermaAI Logo" class="w-7 h-7 rounded-lg object-cover ring-1 ring-[#B76E79]/40 shrink-0 mt-0.5" referrerPolicy="no-referrer" />
+        <div class="bg-slate-100 dark:bg-white/5 p-3.5 rounded-2xl max-w-[85%] text-slate-800 dark:text-slate-200 leading-relaxed border border-slate-200/50 dark:border-white/5">
+          Hello! I am <b class="text-[#B76E79]">DermaAI</b>, trained on your IEEE skin health research project. Ask me anything about your Skin Score, Dryness Risk, image scan, or lifestyle tips!
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input Controls -->
+    <div class="p-3 border-t border-slate-200 dark:border-white/10 space-y-2">
+      <form id="chat-form" class="flex items-center space-x-2">
+        <input type="text" id="chat-input" placeholder="Ask DermaAI anything..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs focus:ring-2 focus:ring-[#B76E79] outline-none">
+        
+        <!-- Voice Assistant Push-to-Talk -->
+        <button type="button" id="voice-btn" onclick="toggleVoiceAssistant()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 transition">
+          <i class="fa-solid fa-microphone text-sm"></i>
+        </button>
+
+        <button type="submit" class="btn-rosegold p-2.5 rounded-xl text-white shadow-sm">
+          <i class="fa-solid fa-paper-plane text-sm"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATION MODAL -->
+  <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-md p-7 rounded-3xl shadow-2xl border border-slate-200/80 dark:border-white/15 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+        <h3 id="auth-modal-title" class="text-xl font-bold font-serif text-slate-900 dark:text-white">Sign In</h3>
+        <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div id="username-field-group" class="hidden">
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Full Name</label>
+          <input type="text" id="auth-username" placeholder="Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
+          <input type="email" id="auth-email" required placeholder="user@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
+          <input type="password" id="auth-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm focus:ring-2 focus:ring-[#B76E79] outline-none">
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="btn-rosegold w-full py-3 rounded-2xl font-bold text-xs tracking-wide shadow-rosegold-glow transition">
+          Sign In
+        </button>
+      </form>
+
+      <div class="text-center text-xs text-slate-500 dark:text-slate-400 pt-1">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-[#B76E79] dark:text-[#D4929D] font-bold ml-1 hover:underline">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto py-6 border-t border-slate-200/80 dark:border-white/10 text-center text-xs text-slate-500 dark:text-slate-400">
+    <p class="font-medium">AI-Based Skin Health Predictor Platform</p>
+  </footer>
+
+  <!-- APPLICATION LOGIC & CHARTS JAVASCRIPT -->
+  <script>
+    // Global Application State
+    let currentUser = null;
+    let authMode = 'login';
+    let currentLifestyleResult = null;
+    let currentVisionResult = null;
+    let gaugeChart = null;
+    let radarChart = null;
+    let futureChart = null;
+    let shapChart = null;
+    let adminGrowthChart = null;
+    let isVoiceListening = false;
+    let recognition = null;
+
+    // Window Init
+    window.addEventListener('DOMContentLoaded', () => {
+      checkSavedUser();
+      initDefaultCharts();
+      fetchHistory();
+      fetchAdminAnalytics();
+      initSpeechRecognition();
+    });
+
+    // Theme Switcher
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    // Navigation Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-[#B76E79]/15', 'text-[#B76E79]', 'dark:text-[#D4929D]', 'font-semibold');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeNav) {
+        activeNav.classList.add('bg-[#B76E79]/15', 'text-[#B76E79]', 'dark:text-[#D4929D]', 'font-semibold');
+      }
+
+      if (tabId === 'shap' && currentLifestyleResult) {
+        drawShapChart(currentLifestyleResult.shap_values);
+      }
+      if (tabId === 'simulator' && currentLifestyleResult) {
+        updateSimulation();
+      }
+    }
+
+    function toggleMobileNav() {
+      document.getElementById('mobile-nav').classList.toggle('hidden');
+    }
+
+    // ==========================================
+    // MODULE 1: FORM PREDICTION HANDLER (EXACT PRESERVED LOGIC)
+    // ==========================================
+    document.getElementById("skinForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      let data = {};
+      formData.forEach((value, key) => {
+        if (key === 'gender') data[key] = value;
+        else data[key] = parseFloat(value);
+      });
+
+      try {
+        const token = localStorage.getItem('token');
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+
+        const response = await fetch("https://derma-ai-dbfb.onrender.com/predict", {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+          document.getElementById("result").innerHTML = "<b>Error:</b> " + result.error;
+        } else {
+          currentLifestyleResult = result;
+          const dryColor = result.dry_skin === 'No Dryness' ? '#22c55e' :
+                           result.dry_skin === 'Mild Dryness' ? '#f59e0b' : '#ef4444';
+
+          const score = result.skin_score;
+
+          // Preserve exact html formatting requested
+          document.getElementById("result").innerHTML = `
+            <b>Skin Health Score:</b> <span style="color:#16a34a; font-size:1.2rem; font-weight:800;">${score}</span> / 100<br>
+            <b>Dry Skin Prediction:</b> <span style="color:${dryColor}; font-weight:700;">${result.dry_skin}</span><br>
+            <span class="text-xs text-slate-500">Biological Skin Age: <b>${result.skin_age} years</b> | Confidence: <b>95.2%</b></span>
+          `;
+
+          drawGauge(score);
+          drawRadar(data);
+          updateRecommendations(result.recommendations);
+          updateCombinedSection();
+          updateSkinAgeSection(result);
+        }
+      } catch (err) {
+        document.getElementById("result").innerHTML = "<b>Error connecting to AI service.</b>";
+      }
+    });
+
+    // Sample Data Loader
+    function loadSampleData(type) {
+      const form = document.getElementById('skinForm');
+      if (type === 'healthy') {
+        form.age.value = 24;
+        form.sleep_hours.value = 8.5;
+        form.sleep_quality.value = 9;
+        form.stress_level.value = 2;
+        form.water_intake.value = 3.0;
+        form.diet_type.value = 1;
+        form.screen_time.value = 3.5;
+        form.exercise_minutes.value = 45;
+        form.skincare_routine.value = 1;
+        form.alcohol_smoking.value = 0;
+      } else {
+        form.age.value = 32;
+        form.sleep_hours.value = 5.5;
+        form.sleep_quality.value = 4;
+        form.stress_level.value = 8;
+        form.water_intake.value = 1.2;
+        form.diet_type.value = 0;
+        form.screen_time.value = 8.5;
+        form.exercise_minutes.value = 0;
+        form.skincare_routine.value = 0;
+        form.alcohol_smoking.value = 1;
+      }
+    }
+
+    // ==========================================
+    // CHARTS RENDERING (Gauge, Radar, Future, SHAP)
+    // ==========================================
+    function drawGauge(score) {
+      const canvas = document.getElementById('scoreGauge');
+      const ctx = canvas.getContext('2d');
+      if (gaugeChart) gaugeChart.destroy();
+
+      gaugeChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Score', 'Remaining'],
+          datasets: [{
+            data: [score, 100 - score],
+            backgroundColor: [score >= 75 ? '#B76E79' : score >= 55 ? '#D4AF8C' : '#e11d48', '#2a2a2a'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          rotation: -90,
+          circumference: 180,
+          cutout: '75%',
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function drawRadar(data) {
+      const canvas = document.getElementById('lifestyleChart');
+      if (radarChart) radarChart.destroy();
+
+      const ctx = canvas.getContext('2d');
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Sleep', 'Stress', 'Water', 'Screen', 'Exercise'],
+          datasets: [{
+            label: 'Your Habit Index',
+            data: [
+              Math.min(10, (data.sleep_hours / 8) * 10),
+              10 - data.stress_level,
+              Math.min(10, (data.water_intake / 3) * 10),
+              Math.max(0, 10 - data.screen_time),
+              Math.min(10, (data.exercise_minutes / 60) * 10)
+            ],
+            backgroundColor: 'rgba(183, 110, 121, 0.25)',
+            borderColor: '#B76E79',
+            pointBackgroundColor: '#D4AF8C'
+          }]
+        },
+        options: {
+          scales: { r: { min: 0, max: 10, ticks: { display: false } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function updateRecommendations(recs) {
+      const list = document.getElementById('recommendation-list');
+      if (!recs || recs.length === 0) return;
+      list.innerHTML = recs.map(r => `<li class="flex items-start gap-2"><i class="fa-solid fa-check-circle text-emerald-500 mt-0.5"></i> <span>${r}</span></li>`).join('');
+    }
+
+    function drawShapChart(shapValues) {
+      if (!shapValues) return;
+      const canvas = document.getElementById('shapChart');
+      if (shapChart) shapChart.destroy();
+
+      const ctx = canvas.getContext('2d');
+      const labels = shapValues.map(s => s.feature);
+      const impacts = shapValues.map(s => s.impact);
+      const colors = impacts.map(v => v >= 0 ? '#B76E79' : '#e11d48');
+
+      shapChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'SHAP Score Impact',
+            data: impacts,
+            backgroundColor: colors
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const list = document.getElementById('shap-breakdown-list');
+      list.innerHTML = shapValues.map(s => `
+        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <div class="flex justify-between font-bold mb-0.5">
+            <span>${s.feature}</span>
+            <span class="${s.impact >= 0 ? 'text-emerald-500' : 'text-red-500'}">${s.impact >= 0 ? '+' : ''}${s.impact.toFixed(1)} pts</span>
+          </div>
+          <p class="text-[11px] text-slate-500">${s.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // MODULE 2: COMPUTER VISION & WEBCAM
+    // ==========================================
+    let uploadedFile = null;
+    let webcamStream = null;
+
+    async function startWebcam() {
+      const video = document.getElementById('webcam-video');
+      const canvas = document.getElementById('vision-canvas');
+      const placeholder = document.getElementById('upload-placeholder');
+      const captureBtn = document.getElementById('capture-webcam-btn');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Webcam access is not supported by your browser or current environment context.');
+        return;
+      }
+
+      try {
+        if (webcamStream) {
+          webcamStream.getTracks().forEach(track => track.stop());
+        }
+
+        webcamStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
+        });
+
+        video.srcObject = webcamStream;
+        await video.play();
+
+        canvas.classList.add('hidden');
+        placeholder.classList.add('hidden');
+        video.classList.remove('hidden');
+        captureBtn.classList.remove('hidden');
+      } catch (err) {
+        console.error('Webcam access error:', err);
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          alert('Webcam permission was denied. Please allow camera access in your browser settings.');
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+          alert('No webcam device found on your system.');
+        } else {
+          alert('Could not start webcam: ' + (err.message || 'Check browser permissions.'));
+        }
+      }
+    }
+
+    function captureWebcamFrame() {
+      const video = document.getElementById('webcam-video');
+      const canvas = document.getElementById('vision-canvas');
+      const captureBtn = document.getElementById('capture-webcam-btn');
+      const ctx = canvas.getContext('2d');
+
+      if (!video || video.classList.contains('hidden') || !video.videoWidth) {
+        alert('Webcam video feed is not active.');
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(track => track.stop());
+        webcamStream = null;
+      }
+
+      video.classList.add('hidden');
+      captureBtn.classList.add('hidden');
+      canvas.classList.remove('hidden');
+    }
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      uploadedFile = file;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        displayVisionCanvas(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function displayVisionCanvas(imgSrc) {
+      const canvas = document.getElementById('vision-canvas');
+      const placeholder = document.getElementById('upload-placeholder');
+      const ctx = canvas.getContext('2d');
+
+      const img = new Image();
+      img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      };
+      img.src = imgSrc;
+    }
+
+    async function analyzeUploadedImage() {
+      const canvas = document.getElementById('vision-canvas');
+      if (!canvas || canvas.classList.contains('hidden')) {
+        alert('Please upload an image or capture a webcam photo first.');
+        return;
+      }
+
+      const imageBase64 = canvas.toDataURL('image/jpeg');
+
+      try {
+        const response = await fetch('https://derma-ai-dbfb.onrender.com/api/image-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64 })
+        });
+
+        const data = await response.json();
+        if (data.analysis) {
+          currentVisionResult = data.analysis;
+          renderVisionResults(data.analysis);
+          drawBoundingBoxes(data.analysis.detected_concerns);
+          updateCombinedSection();
+        }
+      } catch (err) {
+        alert('Image scan failed.');
+      }
+    }
+
+    function drawBoundingBoxes(concerns) {
+      const canvas = document.getElementById('vision-canvas');
+      const ctx = canvas.getContext('2d');
+      if (!concerns) return;
+
+      concerns.forEach(c => {
+        if (c.box) {
+          const [ymin, xmin, ymax, xmax] = c.box;
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(xmin, ymin, xmax - xmin, ymax - ymin);
+
+          ctx.fillStyle = '#22c55e';
+          ctx.font = '14px sans-serif';
+          ctx.fillText(`${c.type} (${c.severity})`, xmin + 4, ymin + 18);
+        }
+      });
+    }
+
+    function renderVisionResults(analysis) {
+      const body = document.getElementById('vision-results-body');
+      const badge = document.getElementById('vision-clarity-badge');
+
+      badge.innerText = `Clarity: ${analysis.overall_clarity_score}/100`;
+      badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400';
+
+      body.innerHTML = `
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-400 block">Moisture Index</span>
+            <span class="font-bold text-slate-900 dark:text-white text-base">${analysis.metrics.moisture_score}/100</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-400 block">Smoothness</span>
+            <span class="font-bold text-slate-900 dark:text-white text-base">${analysis.metrics.smoothness_score}/100</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Dermatology Assessment:</span>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${analysis.dermatology_insights}</p>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // FUTURE SIMULATION & COMBINED SECTIONS
+    // ==========================================
+    function updateCombinedSection() {
+      const lVal = document.getElementById('combined-lifestyle-val');
+      const vVal = document.getElementById('combined-vision-val');
+      const fVal = document.getElementById('combined-final-val');
+      const summaryText = document.getElementById('combined-summary-text');
+
+      const lScore = currentLifestyleResult ? currentLifestyleResult.skin_score : null;
+      const vScore = currentVisionResult ? currentVisionResult.overall_clarity_score : null;
+
+      if (lScore) lVal.innerText = lScore;
+      if (vScore) vVal.innerText = vScore;
+
+      if (lScore && vScore) {
+        const combined = Math.round((lScore * 0.7) + (vScore * 0.3));
+        fVal.innerText = combined;
+        summaryText.innerText = `Integrated assessment complete! Your lifestyle score of ${lScore} (70% weight) and computer vision scan score of ${vScore} (30% weight) yield a combined skin health index of ${combined}/100.`;
+      }
+    }
+
+    function updateSkinAgeSection(result) {
+      document.getElementById('predicted-skin-age').innerText = result.skin_age;
+      const diff = Math.round((result.skin_age - result.actual_age) * 10) / 10;
+      document.getElementById('skin-age-diff-text').innerText =
+        diff < 0 ? `${Math.abs(diff)} years younger than actual age (${result.actual_age})`
+               : `${diff} years older than actual age (${result.actual_age})`;
+    }
+
+    async function updateSimulation() {
+      const water = parseFloat(document.getElementById('sim-water').value);
+      const sleep = parseFloat(document.getElementById('sim-sleep').value);
+      const stress = parseFloat(document.getElementById('sim-stress').value);
+
+      document.getElementById('sim-water-val').innerText = `${water} L`;
+      document.getElementById('sim-sleep-val').innerText = `${sleep} hrs`;
+      document.getElementById('sim-stress-val').innerText = `${stress} / 10`;
+
+      const baseData = {
+        sleep_hours: currentLifestyleResult ? currentLifestyleResult.sleep_hours : 7,
+        water_intake: water,
+        sleep_hours: sleep,
+        stress_level: stress,
+        diet_type: 1,
+        skincare_routine: 1
+      };
+
+      const res = await fetch('https://derma-ai-dbfb.onrender.com/api/future-prediction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ baseData, modifications: { water_intake: water, sleep_hours: sleep, stress_level: stress } })
+      });
+
+      const data = await res.json();
+      drawFutureChart(data.baseline_score, data.trajectories);
+    }
+
+    function drawFutureChart(baseline, trajectories) {
+      const canvas = document.getElementById('futureChart');
+      if (futureChart) futureChart.destroy();
+
+      const ctx = canvas.getContext('2d');
+      futureChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Today', '7 Days', '30 Days', '90 Days'],
+          datasets: [{
+            label: 'Simulated Skin Score Trajectory',
+            data: [baseline, trajectories.day_7, trajectories.day_30, trajectories.day_90],
+            borderColor: '#B76E79',
+            backgroundColor: 'rgba(183, 110, 121, 0.15)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { min: 40, max: 100 } }
+        }
+      });
+    }
+
+    // ==========================================
+    // AI CHATBOT & VOICE ASSISTANT
+    // ==========================================
+    function toggleChatDrawer() {
+      document.getElementById('chat-drawer').classList.toggle('hidden');
+    }
+
+    document.getElementById('chat-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', text);
+      input.value = '';
+
+      try {
+        const response = await fetch('https://derma-ai-dbfb.onrender.com/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: text,
+            context: { lifestyle: currentLifestyleResult, vision: currentVisionResult }
+          })
+        });
+
+        const data = await response.json();
+        appendChatMessage('bot', data.reply);
+        speakText(data.reply);
+      } catch (err) {
+        appendChatMessage('bot', "I'm having trouble connecting to my neural network right now.");
+      }
+    });
+
+    function appendChatMessage(sender, text) {
+      const container = document.getElementById('chat-messages');
+      const msgWrapper = document.createElement('div');
+      
+      if (sender === 'user') {
+        msgWrapper.className = 'flex gap-2 items-start justify-end';
+        msgWrapper.innerHTML = `
+          <div class="btn-rosegold text-white p-3.5 rounded-2xl max-w-[85%] text-xs shadow-sm leading-relaxed">${text}</div>
+        `;
+      } else {
+        msgWrapper.className = 'flex gap-2.5 items-start';
+        msgWrapper.innerHTML = `
+          <img src="/src/assets/images/derma_ai_arched_logo_1784909482698.jpg" alt="DermaAI Logo" class="w-7 h-7 rounded-lg object-cover ring-1 ring-[#B76E79]/40 shrink-0 mt-0.5" referrerPolicy="no-referrer" />
+          <div class="bg-slate-100 dark:bg-white/5 p-3.5 rounded-2xl max-w-[85%] text-slate-800 dark:text-slate-200 text-xs border border-slate-200/50 dark:border-white/5 leading-relaxed">${text}</div>
+        `;
+      }
+      container.appendChild(msgWrapper);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function initSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRec();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = function(event) {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById('chat-input').value = transcript;
+          document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+        };
+
+        recognition.onend = function() {
+          isVoiceListening = false;
+          document.getElementById('voice-btn').classList.remove('bg-red-500', 'text-white');
+        };
+      }
+    }
+
+    function toggleVoiceAssistant() {
+      if (!recognition) {
+        alert('Speech recognition is not supported in this browser environment.');
+        return;
+      }
+      if (isVoiceListening) {
+        recognition.stop();
+        isVoiceListening = false;
+        document.getElementById('voice-btn').classList.remove('bg-red-500', 'text-white');
+      } else {
+        recognition.start();
+        isVoiceListening = true;
+        document.getElementById('voice-btn').classList.add('bg-red-500', 'text-white');
+      }
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // ==========================================
+    // USER AUTH & HISTORY
+    // ==========================================
+    function checkSavedUser() {
+      const userRaw = localStorage.getItem('user');
+      if (userRaw) {
+        currentUser = JSON.parse(userRaw);
+        renderUserHeader();
+      }
+    }
+
+    function renderUserHeader() {
+      const container = document.getElementById('auth-header-container');
+      if (currentUser) {
+        container.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <img src="${currentUser.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=User'}" class="w-8 h-8 rounded-full border border-[#B76E79]">
+            <span class="text-xs font-bold text-slate-800 dark:text-slate-200 hidden sm:inline">${currentUser.username}</span>
+            <button onclick="logoutUser()" class="text-xs px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-red-500 transition">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="openAuthModal('login')" class="btn-rosegold px-4 py-2 rounded-xl text-white font-bold text-xs tracking-wide shadow-sm hover:scale-105 transition duration-200">
+            <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Sign In
+          </button>
+        `;
+      }
+    }
+
+    function openAuthModal(mode) {
+      authMode = mode;
+      document.getElementById('auth-modal').classList.remove('hidden');
+      document.getElementById('username-field-group').classList.toggle('hidden', mode === 'login');
+      document.getElementById('auth-modal-title').innerText = mode === 'login' ? 'Sign In' : 'Register Account';
+      document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'Sign In' : 'Create Account';
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function toggleAuthMode() {
+      openAuthModal(authMode === 'login' ? 'register' : 'login');
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const username = document.getElementById('auth-username').value;
+
+      const endpoint = authMode === 'login' ? 'https://derma-ai-dbfb.onrender.com/api/auth/login' : 'https://derma-ai-dbfb.onrender.com/api/auth/register';
+      const body = authMode === 'login' ? { email, password } : { email, password, username };
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+        } else {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          currentUser = data.user;
+          renderUserHeader();
+          closeAuthModal();
+          fetchHistory();
+        }
+      } catch (err) {
+        alert('Authentication failed.');
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      currentUser = null;
+      renderUserHeader();
+    }
+
+    async function fetchHistory() {
+      const token = localStorage.getItem('token');
+      const headers = token ? { "Authorization": `Bearer ${token}` } : {};
+
+      const res = await fetch('https://derma-ai-dbfb.onrender.com/api/predictions/history', { headers });
+      const history = await res.json();
+
+      const tbody = document.getElementById('history-table-body');
+      if (!history || history.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">No prediction history recorded yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = history.map(item => {
+        const date = new Date(item.createdAt).toLocaleDateString();
+        const score = item.lifestyleResult ? item.lifestyleResult.skin_score : '--';
+        const dry = item.lifestyleResult ? item.lifestyleResult.dry_skin : '--';
+        const water = item.inputData ? item.inputData.water_intake : '--';
+        const sleep = item.inputData ? item.inputData.sleep_hours : '--';
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition">
+            <td class="py-3 text-slate-500">${date}</td>
+            <td class="py-3 font-bold text-emerald-500">${score}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${dry}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${water} L</td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${sleep} hrs</td>
+            <td class="py-3">
+              <button onclick="deletePrediction('${item.id}')" class="text-red-500 hover:text-red-700">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function deletePrediction(id) {
+      const token = localStorage.getItem('token');
+      await fetch(`/api/predictions/${id}`, {
+        method: 'DELETE',
+        headers: token ? { "Authorization": `Bearer ${token}` } : {}
+      });
+      fetchHistory();
+    }
+
+    // ==========================================
+    // ADMIN DASHBOARD & PDF GENERATION
+    // ==========================================
+    async function fetchAdminAnalytics() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('https://derma-ai-dbfb.onrender.com/api/admin/analytics', {
+        headers: token ? { "Authorization": `Bearer ${token}` } : {}
+      });
+      const data = await res.json();
+
+      document.getElementById('admin-total-users').innerText = data.totalUsers;
+      document.getElementById('admin-total-predictions').innerText = data.totalPredictions;
+      document.getElementById('admin-avg-score').innerText = `${data.avgSkinScore}/100`;
+      document.getElementById('admin-vision-scans').innerText = data.imageAnalysesCount;
+
+      const risksList = document.getElementById('admin-risks-list');
+      risksList.innerHTML = data.topRisks.map(r => `
+        <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <span class="font-bold text-slate-800 dark:text-slate-200">${r.name}</span>
+          <span class="px-2 py-0.5 rounded-full bg-red-500/10 text-red-500 font-bold">${r.count} users</span>
+        </div>
+      `).join('');
+
+      drawAdminGrowthChart(data.userGrowth);
+    }
+
+    function drawAdminGrowthChart(growthData) {
+      const canvas = document.getElementById('adminGrowthChart');
+      if (adminGrowthChart) adminGrowthChart.destroy();
+
+      const ctx = canvas.getContext('2d');
+      adminGrowthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: growthData.map(g => g.month),
+          datasets: [{
+            label: 'Registered Platform Users',
+            data: growthData.map(g => g.users),
+            borderColor: '#B76E79',
+            backgroundColor: 'rgba(183, 110, 121, 0.15)',
+            fill: true
+          }]
+        },
+        options: { plugins: { legend: { display: false } } }
+      });
+    }
+
+    function generatePDFReport() {
+      const element = document.getElementById('tab-predictor');
+      const opt = {
+        margin:       0.5,
+        filename:     'Skin_Health_AI_Report.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    function exportUserData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLifestyleResult || {}));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "skin_health_data.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function initDefaultCharts() {
+      // Intentionally initialized empty on launch
+    }
+  </script>
+</body>
+</html>
