@@ -200,15 +200,11 @@ Backend:
 
 https://derma-ai-dbfb.onrender.com
 
-👥 Team
-Developers
-Anurag Sharma
+Ridhi Garg
 AI Engineering
 Machine Learning Integration
 Frontend Development
 Deployment
-
-Ridhi Garg
 Backend Development
 Database Integration
 System Architecture
